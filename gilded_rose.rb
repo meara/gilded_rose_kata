@@ -1,22 +1,22 @@
 def update_quality(items)
   items.each do |item|
-    update_item(item)
+    item_updater(item).update
   end
 end
 
 private
 
-def update_item(item)
+def item_updater(item)
   if item.name == 'Sulfuras, Hand of Ragnaros'
-    SulfurasItemUpdater.new(item).update
+    SulfurasItemUpdater.new(item)
   elsif item.name == 'Backstage passes to a TAFKAL80ETC concert'
-    BackstagePassItemUpdater.new(item).update
+    BackstagePassItemUpdater.new(item)
   elsif item.name == 'Aged Brie'
-    BrieItemUpdater.new(item).update
+    BrieItemUpdater.new(item)
   elsif !!item.name.match(/\AConjured.*/)
-    ConjuredItemUpdater.new(item).update
+    ConjuredItemUpdater.new(item)
   else
-    ItemUpdater.new(item).update
+    ItemUpdater.new(item)
   end
 end
 
