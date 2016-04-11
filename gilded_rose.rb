@@ -13,61 +13,125 @@ end
 
 def update_item_quality(item)
   if item.name == 'Sulfuras, Hand of Ragnaros'
-    update_sulfuras_quality(item)
+    SulfurasItemUpdater.new(item).update_quality
   elsif item.name == 'Backstage passes to a TAFKAL80ETC concert'
-    update_backstage_pass_quality(item)
+    BackstagePassItemUpdater.new(item).update_quality
   elsif item.name == 'Aged Brie'
-    update_brie_quality(item)
+    BrieItemUpdater.new(item).update_quality
   elsif !!item.name.match(/\AConjured.*/)
-    update_conjured_quality(item)
+    ConjuredItemUpdater.new(item).update_quality
   else
-    update_general_quality(item)
+    ItemUpdater.new(item).update_quality
   end
 end
 
-def update_brie_quality(item)
-  if item.sell_in > 0
-    increment_quality(item, 1)
-  else
-    increment_quality(item, 2)
+class ItemUpdater
+  attr_reader :item
+
+  def initialize(item)
+    @item = item
+  end
+
+  def update_quality
+    if item.sell_in > 0
+      increment_quality(item, -1)
+    else
+      increment_quality(item, -2)
+    end
+  end
+
+  private
+
+  def increment_quality(item, amount)
+    item.quality += amount
+    item.quality = 50 if item.quality > 50
+    item.quality = 0 if item.quality < 0
   end
 end
 
-def update_backstage_pass_quality(item)
-  if item.sell_in <= 0
-    item.quality = 0
-  elsif item.sell_in < 6
-    increment_quality(item, 3)
-  elsif item.sell_in < 11
-    increment_quality(item, 2)
-  else
-    increment_quality(item, 1)
+class SulfurasItemUpdater
+  def initialize(item)
+    @item = item
+  end
+
+  def update_quality
   end
 end
 
-def update_sulfuras_quality(item)
-end
+class BackstagePassItemUpdater
+  attr_reader :item
 
-def update_conjured_quality(item)
-  if item.sell_in > 0
-    increment_quality(item, -2)
-  else
-    increment_quality(item, -4)
+  def initialize(item)
+    @item = item
+  end
+
+  def update_quality
+    if item.sell_in <= 0
+      item.quality = 0
+    elsif item.sell_in < 6
+      increment_quality(item, 3)
+    elsif item.sell_in < 11
+      increment_quality(item, 2)
+    else
+      increment_quality(item, 1)
+    end
+  end
+
+  private
+
+  def increment_quality(item, amount)
+    item.quality += amount
+    item.quality = 50 if item.quality > 50
+    item.quality = 0 if item.quality < 0
   end
 end
 
-def update_general_quality(item)
-  if item.sell_in > 0
-    increment_quality(item, -1)
-  else
-    increment_quality(item, -2)
+class BrieItemUpdater
+  attr_reader :item
+
+  def initialize(item)
+    @item = item
+  end
+
+  def update_quality
+    if item.sell_in > 0
+      increment_quality(item, 1)
+    else
+      increment_quality(item, 2)
+    end
+  end
+
+  private
+
+  def increment_quality(item, amount)
+    item.quality += amount
+    item.quality = 50 if item.quality > 50
+    item.quality = 0 if item.quality < 0
   end
 end
 
-def increment_quality(item, amount)
-  item.quality += amount
-  item.quality = 50 if item.quality > 50
-  item.quality = 0 if item.quality < 0
+class ConjuredItemUpdater
+  attr_reader :item
+
+  def initialize(item)
+    @item = item
+  end
+
+  def update_quality
+    if item.sell_in > 0
+      increment_quality(item, -2)
+    else
+      increment_quality(item, -4)
+    end
+  end
+
+  private
+
+  def increment_quality(item, amount)
+    item.quality += amount
+    item.quality = 50 if item.quality > 50
+    item.quality = 0 if item.quality < 0
+  end
 end
 
 # DO NOT CHANGE THINGS BELOW -----------------------------------------
