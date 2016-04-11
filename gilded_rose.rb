@@ -1,33 +1,42 @@
 def update_quality(items)
   items.each do |item|
-    if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-      if item.quality < 50
-        if item.sell_in <= 0
-          item.quality = 0
-        elsif item.sell_in < 6
-          item.quality += 3
-        elsif item.sell_in < 11
-          item.quality += 2
-        else
-          item.quality += 1
-        end
-      end
-    elsif item.name == 'Aged Brie'
-      item.quality += 1 if item.quality < 50
-      if item.sell_in <= 0
-        item.quality += 1 if item.quality < 50
-      end
-    elsif item.name != 'Sulfuras, Hand of Ragnaros'
-      if item.sell_in > 0
-        item.quality -= 1 if item.quality > 0
-      else
-        item.quality -= 2 if item.quality > 0
-      end
-    end
+    update_item_quality(item)
+    update_item_sell_in(item)
+  end
+end
 
-    if item.name != 'Sulfuras, Hand of Ragnaros'
-      item.sell_in -= 1
+private
+
+def update_item_quality(item)
+  if item.name == 'Backstage passes to a TAFKAL80ETC concert'
+    if item.quality < 50
+      if item.sell_in <= 0
+        item.quality = 0
+      elsif item.sell_in < 6
+        item.quality += 3
+      elsif item.sell_in < 11
+        item.quality += 2
+      else
+        item.quality += 1
+      end
     end
+  elsif item.name == 'Aged Brie'
+    item.quality += 1 if item.quality < 50
+    if item.sell_in <= 0
+      item.quality += 1 if item.quality < 50
+    end
+  elsif item.name != 'Sulfuras, Hand of Ragnaros'
+    if item.sell_in > 0
+      item.quality -= 1 if item.quality > 0
+    else
+      item.quality -= 2 if item.quality > 0
+    end
+  end
+end
+
+def update_item_sell_in(item)
+  if item.name != 'Sulfuras, Hand of Ragnaros'
+    item.sell_in -= 1
   end
 end
 
