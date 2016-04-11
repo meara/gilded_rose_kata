@@ -18,6 +18,8 @@ def update_item_quality(item)
     update_backstage_pass_quality(item)
   elsif item.name == 'Aged Brie'
     update_brie_quality(item)
+  elsif !!item.name.match(/\AConjured.*/)
+    update_conjured_quality(item)
   else
     update_general_quality(item)
   end
@@ -44,6 +46,14 @@ def update_backstage_pass_quality(item)
 end
 
 def update_sulfuras_quality(item)
+end
+
+def update_conjured_quality(item)
+  if item.sell_in > 0
+    increment_quality(item, -2)
+  else
+    increment_quality(item, -4)
+  end
 end
 
 def update_general_quality(item)
