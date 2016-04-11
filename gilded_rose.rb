@@ -1,19 +1,20 @@
 def update_quality(items)
   items.each do |item|
-    if item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'  && item.name != 'Sulfuras, Hand of Ragnaros'
+    if !['Aged Brie', 'Backstage passes to a TAFKAL80ETC concert', 'Sulfuras, Hand of Ragnaros'].include?(item.name)
       item.quality -= 1 if item.quality > 0
+    elsif item.name == 'Backstage passes to a TAFKAL80ETC concert'
+      if item.quality < 50
+        if item.sell_in < 6
+          item.quality += 3
+        elsif item.sell_in < 11
+          item.quality += 2
+        else
+          item.quality += 1
+        end
+      end
     else
       if item.quality < 50
         item.quality += 1
-        if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-          if item.quality < 50
-            if item.sell_in < 6
-              item.quality += 2
-            elsif item.sell_in < 11
-              item.quality += 1
-            end
-          end
-        end
       end
     end
 
