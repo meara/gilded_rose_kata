@@ -1,27 +1,22 @@
 def update_quality(items)
   items.each do |item|
-    update_item_quality(item)
-    update_item_sell_in(item)
+    update_item(item)
   end
 end
 
 private
 
-def update_item_sell_in(item)
-  item.sell_in -= 1 unless item.name == 'Sulfuras, Hand of Ragnaros'
-end
-
-def update_item_quality(item)
+def update_item(item)
   if item.name == 'Sulfuras, Hand of Ragnaros'
-    SulfurasItemUpdater.new(item).update_quality
+    SulfurasItemUpdater.new(item).update
   elsif item.name == 'Backstage passes to a TAFKAL80ETC concert'
-    BackstagePassItemUpdater.new(item).update_quality
+    BackstagePassItemUpdater.new(item).update
   elsif item.name == 'Aged Brie'
-    BrieItemUpdater.new(item).update_quality
+    BrieItemUpdater.new(item).update
   elsif !!item.name.match(/\AConjured.*/)
-    ConjuredItemUpdater.new(item).update_quality
+    ConjuredItemUpdater.new(item).update
   else
-    ItemUpdater.new(item).update_quality
+    ItemUpdater.new(item).update
   end
 end
 
@@ -32,6 +27,13 @@ class ItemUpdater
     @item = item
   end
 
+  def update
+    update_quality
+    update_sell_in
+  end
+
+  private
+
   def update_quality
     if item.sell_in > 0
       increment_quality(item, -1)
@@ -40,7 +42,9 @@ class ItemUpdater
     end
   end
 
-  private
+  def update_sell_in
+    item.sell_in -= 1
+  end
 
   def increment_quality(item, amount)
     item.quality += amount
@@ -50,11 +54,12 @@ class ItemUpdater
 end
 
 class SulfurasItemUpdater < ItemUpdater
-  def update_quality
+  def update
   end
 end
 
 class BackstagePassItemUpdater < ItemUpdater
+  private
   def update_quality
     if item.sell_in <= 0
       item.quality = 0
@@ -69,6 +74,7 @@ class BackstagePassItemUpdater < ItemUpdater
 end
 
 class BrieItemUpdater < ItemUpdater
+  private
   def update_quality
     if item.sell_in > 0
       increment_quality(item, 1)
@@ -79,6 +85,7 @@ class BrieItemUpdater < ItemUpdater
 end
 
 class ConjuredItemUpdater < ItemUpdater
+  private
   def update_quality
     if item.sell_in > 0
       increment_quality(item, -2)
