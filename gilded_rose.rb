@@ -2,7 +2,9 @@ def update_quality(items)
   items.each do |item|
     if item.name == 'Backstage passes to a TAFKAL80ETC concert'
       if item.quality < 50
-        if item.sell_in < 6
+        if item.sell_in <= 0
+          item.quality = 0
+        elsif item.sell_in < 6
           item.quality += 3
         elsif item.sell_in < 11
           item.quality += 2
@@ -11,21 +13,15 @@ def update_quality(items)
         end
       end
     elsif item.name == 'Aged Brie'
-      if item.quality < 50
-        item.quality += 1
+      item.quality += 1 if item.quality < 50
+      if item.sell_in <= 0
+        item.quality += 1 if item.quality < 50
       end
     elsif item.name != 'Sulfuras, Hand of Ragnaros'
-      item.quality -= 1 if item.quality > 0
-    end
-
-
-    if item.sell_in <= 0
-      if item.name == 'Aged Brie'
-        item.quality += 1 if item.quality < 50
-      elsif item.name == 'Backstage passes to a TAFKAL80ETC concert'
-        item.quality = 0
-      elsif item.name != 'Sulfuras, Hand of Ragnaros'
+      if item.sell_in > 0
         item.quality -= 1 if item.quality > 0
+      else
+        item.quality -= 2 if item.quality > 0
       end
     end
 
