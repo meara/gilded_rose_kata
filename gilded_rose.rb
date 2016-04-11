@@ -7,37 +7,57 @@ end
 
 private
 
+def update_item_sell_in(item)
+  item.sell_in -= 1 unless item.name == 'Sulfuras, Hand of Ragnaros'
+end
+
 def update_item_quality(item)
-  if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-    if item.quality < 50
-      if item.sell_in <= 0
-        item.quality = 0
-      elsif item.sell_in < 6
-        item.quality += 3
-      elsif item.sell_in < 11
-        item.quality += 2
-      else
-        item.quality += 1
-      end
-    end
+  if item.name == 'Sulfuras, Hand of Ragnaros'
+    update_sulfuras_quality(item)
+  elsif item.name == 'Backstage passes to a TAFKAL80ETC concert'
+    update_backstage_pass_quality(item)
   elsif item.name == 'Aged Brie'
-    item.quality += 1 if item.quality < 50
-    if item.sell_in <= 0
-      item.quality += 1 if item.quality < 50
-    end
-  elsif item.name != 'Sulfuras, Hand of Ragnaros'
-    if item.sell_in > 0
-      item.quality -= 1 if item.quality > 0
-    else
-      item.quality -= 2 if item.quality > 0
-    end
+    update_brie_quality(item)
+  else
+    update_general_quality(item)
   end
 end
 
-def update_item_sell_in(item)
-  if item.name != 'Sulfuras, Hand of Ragnaros'
-    item.sell_in -= 1
+def update_brie_quality(item)
+  if item.sell_in > 0
+    increment_quality(item, 1)
+  else
+    increment_quality(item, 2)
   end
+end
+
+def update_backstage_pass_quality(item)
+  if item.sell_in <= 0
+    item.quality = 0
+  elsif item.sell_in < 6
+    increment_quality(item, 3)
+  elsif item.sell_in < 11
+    increment_quality(item, 2)
+  else
+    increment_quality(item, 1)
+  end
+end
+
+def update_sulfuras_quality(item)
+end
+
+def update_general_quality(item)
+  if item.sell_in > 0
+    increment_quality(item, -1)
+  else
+    increment_quality(item, -2)
+  end
+end
+
+def increment_quality(item, amount)
+  item.quality += amount
+  item.quality = 50 if item.quality > 50
+  item.quality = 0 if item.quality < 0
 end
 
 # DO NOT CHANGE THINGS BELOW -----------------------------------------
