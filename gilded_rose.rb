@@ -49,22 +49,12 @@ class ItemUpdater
   end
 end
 
-class SulfurasItemUpdater
-  def initialize(item)
-    @item = item
-  end
-
+class SulfurasItemUpdater < ItemUpdater
   def update_quality
   end
 end
 
-class BackstagePassItemUpdater
-  attr_reader :item
-
-  def initialize(item)
-    @item = item
-  end
-
+class BackstagePassItemUpdater < ItemUpdater
   def update_quality
     if item.sell_in <= 0
       item.quality = 0
@@ -76,23 +66,9 @@ class BackstagePassItemUpdater
       increment_quality(item, 1)
     end
   end
-
-  private
-
-  def increment_quality(item, amount)
-    item.quality += amount
-    item.quality = 50 if item.quality > 50
-    item.quality = 0 if item.quality < 0
-  end
 end
 
-class BrieItemUpdater
-  attr_reader :item
-
-  def initialize(item)
-    @item = item
-  end
-
+class BrieItemUpdater < ItemUpdater
   def update_quality
     if item.sell_in > 0
       increment_quality(item, 1)
@@ -100,37 +76,15 @@ class BrieItemUpdater
       increment_quality(item, 2)
     end
   end
-
-  private
-
-  def increment_quality(item, amount)
-    item.quality += amount
-    item.quality = 50 if item.quality > 50
-    item.quality = 0 if item.quality < 0
-  end
 end
 
-class ConjuredItemUpdater
-  attr_reader :item
-
-  def initialize(item)
-    @item = item
-  end
-
+class ConjuredItemUpdater < ItemUpdater
   def update_quality
     if item.sell_in > 0
       increment_quality(item, -2)
     else
       increment_quality(item, -4)
     end
-  end
-
-  private
-
-  def increment_quality(item, amount)
-    item.quality += amount
-    item.quality = 50 if item.quality > 50
-    item.quality = 0 if item.quality < 0
   end
 end
 
